@@ -48,8 +48,7 @@ COPY requirements.txt ${RFCN_ROOT}/caffe/python
 
 # Make RFCN lib
 RUN cd ${RFCN_ROOT}/caffe && \
-# pip install -r python/requirements.txt && \
-pip install -r python/requirements.txt -i https://pypi.mirrors.ustc.edu.cn/simple && \
+pip install -r python/requirements.txt && \
 pip install --upgrade six && \
 cd ${RFCN_ROOT}/lib && make
 
@@ -63,14 +62,14 @@ cp /usr/lib/x86_64-linux-gnu/libcudnn* /usr/local/cuda/lib64/
 # Build protobuf
 RUN git clone --recursive https://github.com/google/protobuf /opt/protobuf && \
 cd /opt/protobuf && git fetch && git checkout 3.4.x && \
-./autogen.sh && ./configure && make -j40 && make install && ldconfig
+./autogen.sh && ./configure && make && make install && ldconfig
 
 
 # Build caffe and pycaffe
 COPY Makefile.config ${RFCN_ROOT}/caffe
 
 RUN cd ${RFCN_ROOT}/caffe && \
-make -j40 && make pycaffe
+make && make pycaffe
 
 
 # Install easydict
